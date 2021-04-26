@@ -1,0 +1,66 @@
+// Dependencias
+const {PORT} = require('../config/headersConst');
+const app = require('../app');
+const debug = require('debug')('server:server');
+const http = require('http');
+
+// Obtener número de puerto a correr y utiliza .set() para guardarlo en express
+const port = normalizePort(process.env.PORT || PORT);
+app.set('port',port);
+
+// Creación de servidor HTTP
+const server = http.createServer(app);
+
+server.listen(port);
+server.on('error',onError);
+server.on('listening',onListening);
+
+// Se asegura que el tipo de dato del puerto sea numérico, string o falso.
+function normalizePort(val) {
+    const port = parseInt(val, 10);
+  
+    if (isNaN(port)) {
+      // named pipe
+      return val;
+    }
+  
+    if (port >= 0) {
+      // port number
+      return port;
+    }
+  
+    return false;
+  }
+
+// Listener de eventos para para el evento error de HTTP
+  function onError(error) {
+    if (error.syscall !== 'listen') {
+      throw error;
+    }
+  
+    const bind = typeof port === 'string'
+      ? 'Pipe ' + port
+      : 'Port ' + port;
+  
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+      case 'EACCES':
+        console.error(bind + ' requires elevated privileges');
+        process.exit(1);
+        break;
+      case 'EADDRINUSE':
+        console.error(bind + ' is already in use');
+        process.exit(1);
+        break;
+      default:
+        throw error;
+    }
+  }
+
+  function onListening() {
+    const addr = server.address();
+    const bind = typeof addr === 'string'
+      ? 'pipe ' + addr
+      : 'port ' + addr.port;
+    debug('Listening on ' + bind);
+  }
