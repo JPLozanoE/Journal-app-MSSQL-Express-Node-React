@@ -18,6 +18,7 @@ export default function Notes() {
   },[])
 
   const handleDelete= async(id)=>{
+    // console.log(id);
     await fetch('http://localhost:4000/api/notes/delete/',{
       method:'POST',
       headers: {

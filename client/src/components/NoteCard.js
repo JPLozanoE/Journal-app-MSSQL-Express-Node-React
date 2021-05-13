@@ -1,7 +1,9 @@
-import { Avatar, Card, CardContent, CardHeader, IconButton, makeStyles, Typography } from '@material-ui/core'
+import { Avatar, Card, CardContent, CardHeader, IconButton, makeStyles, Menu, MenuItem, Typography } from '@material-ui/core'
 import { blue, green, pink, yellow } from '@material-ui/core/colors';
 import { DeleteOutlined } from '@material-ui/icons'
-import React from 'react'
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import React, { useState } from 'react'
+import { useHistory } from 'react-router';
 
 const UseStyles=makeStyles({
     avatar:{
@@ -22,6 +24,18 @@ const UseStyles=makeStyles({
 
 export const NoteCard = ({note,handleDelete}) => {
     const classes=UseStyles(note);
+    const [anchorEl, setanchorEl] = useState(null);
+
+    const handleClick = (event)=>{
+        setanchorEl(event.currentTarget);
+    }
+
+    const handleClose = ()=>{
+        setanchorEl(null);
+    }
+
+    const history=useHistory();
+
     return (
         
         <div>
@@ -34,14 +48,25 @@ export const NoteCard = ({note,handleDelete}) => {
             }
                 action={
                     <IconButton
-                        onClick={()=>{handleDelete(note.id)}}
+                    aria-controls="simple-menu" aria-haspopup="true" 
+                    onClick={handleClick}
+                        // onClick={()=>{handleDelete(note.id)}}
                     >
-                        <DeleteOutlined/>
+                        <MoreVertIcon/>
                     </IconButton>
                 }
                 title={note.title}
                 subheader={note.category}
             />
+            <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}>
+                <MenuItem onClick={()=>{handleDelete(note.id)}}>Eliminar</MenuItem>
+                <MenuItem onClick={()=>history.push(`/edit/${note.id}`)}>Editar</MenuItem>
+            </Menu>
             <CardContent>
 
             <Typography 

@@ -33,6 +33,9 @@ function App() {
         <Route path="/create">
           <Create />
         </Route>
+        <Route path="/edit/:id">
+          <Create />
+        </Route>
       </Switch>
     </Layout>
     </Router>
